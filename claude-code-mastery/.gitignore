@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# css/styles.css 는 의도적으로 커밋됨 (빌드된 Tailwind 결과)
+# 로컬 개발 중 npm run watch 로 자동 생성되며,
+# git 에서 추적하므로 클론 후 바로 npm install 없이도 index.html 을 열 수 있음

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -I http://localhost:8765/css/styles.css)",
+      "Bash(curl -s -I http://localhost:8765/js/script.js)",
+      "Bash(pkill *)",
+      "Bash(awk '{print $2}')",
+      "Bash(xargs kill -9)"
+    ]
+  }
+}

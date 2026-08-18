@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카운터 앱</title>
+    <!-- Tailwind CSS를 CDN에서 가져오기 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- 전체 배경: 회색 배경에 세로 중앙 정렬 -->
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+        <!-- 카운터 앱 컨테이너: 흰색 박스 -->
+        <div class="bg-white rounded-lg shadow-lg p-8 w-80">
+            <!-- 제목 -->
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-8">
+                카운터
+            </h1>
+
+            <!-- 카운트 표시 영역: 큰 숫자를 파란 배경에 표시 -->
+            <div class="bg-blue-50 rounded-lg p-8 mb-8 text-center border-2 border-blue-200">
+                <!-- id="count"는 JavaScript에서 숫자를 업데이트할 때 사용 -->
+                <p class="text-6xl font-bold text-blue-600" id="count">0</p>
+                <p class="text-sm text-gray-500 mt-2">현재 카운트</p>
+            </div>
+
+            <!-- 버튼 그룹: 3개의 버튼을 가로로 배치 -->
+            <div class="flex gap-3">
+                <!-- 감소 버튼 (-1) -->
+                <button
+                    onclick="decreaseCount()"
+                    class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+                >
+                    -1
+                </button>
+
+                <!-- 리셋 버튼 -->
+                <button
+                    onclick="resetCount()"
+                    class="flex-1 bg-blue-400 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+                >
+                    리셋
+                </button>
+
+                <!-- 증가 버튼 (+1) -->
+                <button
+                    onclick="increaseCount()"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+                >
+                    +1
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 코드 -->
+    <script>
+        // 변수: 카운트 값을 저장하는 변수 (초기값: 0)
+        let count = 0;
+
+        // 증가 함수: 카운트를 1 증가시키고 화면에 표시
+        function increaseCount() {
+            count = count + 1; // count++와 동일
+            updateDisplay(); // 화면 업데이트
+        }
+
+        // 감소 함수: 카운트를 1 감소시키고 화면에 표시
+        function decreaseCount() {
+            count = count - 1; // count--와 동일
+            updateDisplay(); // 화면 업데이트
+        }
+
+        // 리셋 함수: 카운트를 0으로 초기화하고 화면에 표시
+        function resetCount() {
+            count = 0; // 카운트를 0으로 변경
+            updateDisplay(); // 화면 업데이트
+        }
+
+        // 화면 업데이트 함수: HTML에서 id가 "count"인 요소를 찾아서 현재 count 값으로 변경
+        function updateDisplay() {
+            // document.getElementById("count")는 id="count"인 요소를 찾음
+            // .textContent는 그 요소의 텍스트를 변경함
+            document.getElementById("count").textContent = count;
+        }
+    </script>
+</body>
+</html>

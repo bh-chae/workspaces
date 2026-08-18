@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스톱워치 앱</title>
+    <!-- Tailwind CSS 링크 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
+        <!-- 제목 -->
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">⏱️ 스톱워치</h1>
+
+        <!-- 시간 표시 영역 -->
+        <div class="bg-gray-900 rounded-2xl p-8 mb-8">
+            <div class="text-6xl font-mono font-bold text-green-400 text-center tracking-wider" id="timeDisplay">
+                00:00:00
+            </div>
+            <!-- 위: 시간 표시
+                 - text-6xl: 매우 큰 글자 크기
+                 - font-mono: 고정폭 폰트 (숫자가 잘 보임)
+                 - text-green-400: 녹색 글자 (시계처럼 보임)
+                 - id="timeDisplay": JavaScript에서 이 요소를 찾기 위한 ID
+            -->
+        </div>
+
+        <!-- 버튼 영역 -->
+        <div class="flex gap-4 mb-6">
+            <!-- 시작/일시정지 버튼 -->
+            <button
+                id="startPauseBtn"
+                class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+            >
+                시작
+            </button>
+            <!-- 위의 class 설명:
+                 - flex-1: 남은 공간을 균등하게 사용
+                 - bg-green-500: 초록색 배경
+                 - hover:bg-green-600: 마우스를 올리면 더 진한 초록색
+                 - text-white: 흰색 글자
+                 - py-4 px-6: 상하 padding 4, 좌우 padding 6
+                 - rounded-xl: 둥근 모서리
+                 - transition duration-200: 0.2초 부드러운 변화
+                 - hover:scale-105: 마우스를 올리면 5% 커짐
+                 - active:scale-95: 클릭할 때 5% 작아짐
+            -->
+        </div>
+
+        <div class="flex gap-4">
+            <!-- 리셋 버튼 -->
+            <button
+                id="resetBtn"
+                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-xl transition duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+            >
+                리셋
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ========== 변수들 (스톱워치의 상태를 저장) ==========
+
+        // 경과 시간을 저장하는 변수 (밀리초 단위)
+        let elapsedTime = 0;
+
+        // 스톱워치가 실행 중인지를 나타내는 변수 (true: 실행 중, false: 멈춤)
+        let isRunning = false;
+
+        // 시작 시간을 저장하는 변수 (일시정지할 때 필요)
+        let startTime = 0;
+
+        // setInterval에서 반환된 ID (일시정지할 때 필요)
+        let intervalId = null;
+
+        // HTML 요소들을 변수에 저장
+        const timeDisplay = document.getElementById('timeDisplay');
+        const startPauseBtn = document.getElementById('startPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // ========== 시간을 MM:SS:MS 형식으로 바꾸는 함수 ==========
+        function formatTime(ms) {
+            // 분 계산: 밀리초를 60000으로 나누면 분이 나옴
+            // 예: 125000ms = 2분 5초 → 분 = 2
+            const minutes = Math.floor(ms / 60000);
+
+            // 초 계산: 분을 뺀 나머지를 1000으로 나누면 초가 나옴
+            // 예: 125000ms에서 120000ms(2분)를 빼면 5000ms → 초 = 5
+            const seconds = Math.floor((ms % 60000) / 1000);
+
+            // 밀리초 계산: 1000으로 나눈 나머지를 10으로 나누면 센티초(0~99)가 나옴
+            // 예: 125345ms → 밀리초 % 1000 = 345 → 345 / 10 = 34
+            const centiseconds = Math.floor((ms % 1000) / 10);
+
+            // 한 자리 숫자 앞에 0을 붙이는 함수
+            // MM(분): 2자리, SS(초): 2자리, CS(센티초): 2자리
+            const padMinutes = (num) => String(num).padStart(2, '0');
+            const padSeconds = (num) => String(num).padStart(2, '0');
+            const padCentiseconds = (num) => String(num).padStart(2, '0');
+
+            // 최종 형식: "MM:SS:CS"
+            return `${padMinutes(minutes)}:${padSeconds(seconds)}:${padCentiseconds(centiseconds)}`;
+        }
+
+        // ========== 화면에 시간을 표시하는 함수 ==========
+        function updateDisplay() {
+            // formatTime 함수로 밀리초를 시간 형식으로 변환
+            timeDisplay.textContent = formatTime(elapsedTime);
+        }
+
+        // ========== 시작/일시정지 버튼 클릭 시 실행되는 함수 ==========
+        function toggleStartPause() {
+            if (isRunning) {
+                // 현재 실행 중이면 → 일시정지
+                // setInterval를 멈추려면 clearInterval 함수 사용
+                clearInterval(intervalId);
+                isRunning = false;
+                startPauseBtn.textContent = '재개'; // 버튼 텍스트 변경
+                startPauseBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                startPauseBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+            } else {
+                // 현재 멈춰있으면 → 시작
+                startTime = Date.now() - elapsedTime;
+                // Date.now()는 현재 시간(밀리초)
+                // elapsedTime을 빼면: 일시정지되기 전 지난 시간을 반영
+
+                isRunning = true;
+                startPauseBtn.textContent = '일시정지'; // 버튼 텍스트 변경
+                startPauseBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                startPauseBtn.classList.add('bg-red-500', 'hover:bg-red-600');
+
+                // 매 10밀리초마다 시간을 업데이트
+                intervalId = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    updateDisplay();
+                }, 10); // 10밀리초 = 0.01초 간격으로 업데이트
+            }
+        }
+
+        // ========== 리셋 버튼 클릭 시 실행되는 함수 ==========
+        function reset() {
+            // 실행 중이면 멈추기
+            if (isRunning) {
+                clearInterval(intervalId);
+                isRunning = false;
+            }
+
+            // 모든 시간 데이터를 0으로 초기화
+            elapsedTime = 0;
+            startTime = 0;
+
+            // 화면 업데이트
+            updateDisplay();
+
+            // 버튼을 초기 상태로 되돌리기
+            startPauseBtn.textContent = '시작';
+            startPauseBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+            startPauseBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+        }
+
+        // ========== 버튼에 클릭 이벤트 연결 ==========
+        // 사용자가 버튼을 클릭하면 위의 함수들이 실행됨
+        startPauseBtn.addEventListener('click', toggleStartPause);
+        resetBtn.addEventListener('click', reset);
+
+        // 초기 화면 표시
+        updateDisplay();
+    </script>
+</body>
+</html>

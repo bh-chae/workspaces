@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.fade-in:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.fade-in:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.fade-in:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.fade-in:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.fade-in:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.fade-in:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.fade-in:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.fade-in:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.fade-in:nth-child(9) {
+    animation-delay: 0.9s;
+}
+
+.fade-in:nth-child(10) {
+    animation-delay: 1s;
+}
+
+/* Smooth transition for nav links */
+a {
+    text-decoration: none;
+}
+
+/* Mobile menu animation */
+#mobileMenu {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+/* Project card hover effect */
+.hover\:-translate-y-2:hover {
+    transform: translateY(-0.5rem);
+}
